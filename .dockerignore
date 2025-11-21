@@ -1,0 +1,14 @@
+# Git files
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+*.md
+
+# Test scripts
+test-image.sh
+
+# CI/CD files
+.dockerignore
