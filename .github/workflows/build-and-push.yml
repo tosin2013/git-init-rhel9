@@ -49,13 +49,6 @@ jobs:
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Get Git version
-        id: git-version
-        run: |
-          # Extract git version from Dockerfile build
-          GIT_VERSION=$(docker run --rm registry.access.redhat.com/ubi9/ubi-minimal:latest microdnf install -y git && docker run --rm registry.access.redhat.com/ubi9/ubi-minimal:latest git --version | awk '{print $3}' || echo "unknown")
-          echo "version=${GIT_VERSION}" >> $GITHUB_OUTPUT
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:

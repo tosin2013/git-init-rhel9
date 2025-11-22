@@ -3,6 +3,8 @@
 # Usage: git config --global credential.helper '/usr/local/bin/git-credential-helper.sh'
 
 if [ "$1" = "get" ]; then
-    echo "username=${GIT_USERNAME}"
-    echo "password=${GIT_PASSWORD}"
+    if [ -n "${GIT_USERNAME}" ] && [ -n "${GIT_PASSWORD}" ]; then
+        echo "username=${GIT_USERNAME}"
+        echo "password=${GIT_PASSWORD}"
+    fi
 fi

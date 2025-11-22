@@ -51,7 +51,7 @@ echo ""
 echo "Test 3: Branch checkout"
 echo "---------------------"
 docker run --rm -v "$TEST_DIR:/workspace" "$IMAGE_NAME" \
-    /bin/bash -c "cd /workspace/hello-world && git checkout master && git branch --show-current"
+    /bin/bash -c "cd /workspace/hello-world && DEFAULT_BRANCH=\$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo 'master') && git checkout \$DEFAULT_BRANCH && git branch --show-current"
 echo "✓ Branch checkout successful"
 echo ""
 
