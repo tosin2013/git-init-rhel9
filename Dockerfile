@@ -8,6 +8,11 @@ RUN microdnf install -y \
     ca-certificates \
     && microdnf clean all
 
+# Copy entrypoint and other scripts
+COPY entrypoint.sh /entrypoint.sh
+COPY healthcheck.sh /healthcheck.sh
+COPY git-credential-helper.sh /usr/local/bin/git-credential-helper.sh
+
 # Create non-root user with UID 1001 and add to group 0 (for OpenShift SCC compatibility)
 RUN useradd -u 1001 -g 0 -m -s /bin/bash git-user
 
@@ -22,8 +27,18 @@ USER 1001
 # Configure git to trust all directories (safe.directory)
 RUN git config --global safe.directory '*'
 
+# Configure git for verbose debugging (disable fsck and detached head warnings)
+RUN git config --global --add transfer.fsckObjects false && \
+    git config --global --add advice.detachedHead false
+
+# Set permissions for scripts
+USER 0
+RUN chmod +x /entrypoint.sh /healthcheck.sh /usr/local/bin/git-credential-helper.sh
+USER 1001
+
 # Set working directory
 WORKDIR /workspace
 
-# Default command
+# Configure entrypoint and default command
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]
